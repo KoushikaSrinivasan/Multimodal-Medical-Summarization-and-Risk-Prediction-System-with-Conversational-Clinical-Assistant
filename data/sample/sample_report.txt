@@ -1,0 +1,85 @@
+DISCHARGE SUMMARY
+
+Patient Name: [REDACTED]
+Date of Admission: 2026-05-01
+Date of Discharge: 2026-05-07
+Attending Physician: Dr. A. Ramesh, MD
+
+CHIEF COMPLAINT:
+Acute shortness of breath and chest pain for 3 days.
+
+HISTORY OF PRESENT ILLNESS:
+A 68-year-old male with known history of Type 2 diabetes mellitus, hypertension,
+and chronic obstructive pulmonary disease (COPD) presented to the emergency department
+with progressive dyspnea and right-sided pleuritic chest pain. Patient also reported
+productive cough with yellowish sputum for 5 days.
+
+PAST MEDICAL HISTORY:
+- Type 2 Diabetes Mellitus (HbA1c: 9.2%)
+- Hypertension (poorly controlled)
+- Chronic Obstructive Pulmonary Disease (COPD)
+- Chronic Kidney Disease Stage 3 (CKD)
+- Previous hospitalization 2 months ago for COPD exacerbation
+
+MEDICATIONS ON ADMISSION:
+- Metformin 500 mg twice daily
+- Amlodipine 5 mg once daily
+- Aspirin 75 mg once daily
+- Salbutamol inhaler PRN
+- Lisinopril 10 mg once daily
+- Simvastatin 40 mg at night
+
+PHYSICAL EXAMINATION:
+- Temperature: 38.9°C (febrile)
+- Blood Pressure: 158/96 mmHg
+- SpO2: 88% on room air
+- Respiratory Rate: 28/min
+- Reduced air entry on the right lower zone with dullness on percussion
+
+INVESTIGATIONS:
+- WBC: 14.2 x10^9/L (elevated)
+- CRP: 189 mg/L (significantly elevated)
+- Creatinine: 2.1 mg/dL (elevated — consistent with CKD)
+- HbA1c: 9.2% (poorly controlled diabetes)
+- Blood Glucose: 18.4 mmol/L
+- Chest X-Ray: Right-sided consolidation with pleural effusion noted
+
+DIAGNOSIS:
+1. Community-acquired pneumonia (right lower lobe)
+2. Pleural effusion (right-sided)
+3. Exacerbation of COPD
+4. Poorly controlled Type 2 Diabetes Mellitus
+5. Hypertension
+6. Chronic Kidney Disease Stage 3
+
+TREATMENT:
+- IV Amoxicillin-Clavulanate 1.2g every 8 hours (switched to oral at day 4)
+- Clarithromycin 500 mg twice daily (added for atypical coverage)
+- IV Hydrocortisone 100 mg every 8 hours (for COPD exacerbation)
+- Salbutamol nebulization every 4 hours
+- Insulin sliding scale for glycemic control
+- Furosemide 40 mg IV (for pleural effusion / fluid management)
+- Oxygen therapy — 2L via nasal prongs
+
+HOSPITAL COURSE:
+Patient responded to antibiotics by day 3 with defervescence and improving SpO2 (96% by day 5).
+COPD exacerbation managed with nebulized bronchodilators and systemic corticosteroids.
+Pleural effusion reduced significantly on repeat imaging at day 5.
+
+DISCHARGE MEDICATIONS:
+- Amoxicillin-Clavulanate 625 mg twice daily for 7 days
+- Clarithromycin 500 mg twice daily for 5 more days
+- Prednisolone 30 mg daily tapering over 1 week
+- Metformin 500 mg twice daily (HELD — restart only after creatinine normalizes)
+- Amlodipine 5 mg once daily
+- Aspirin 75 mg once daily
+- Simvastatin 40 mg at night
+- Lisinopril 10 mg once daily
+
+FOLLOW-UP:
+- Review in 2 weeks with repeat chest X-ray
+- Nephrology consultation for CKD management
+- Diabetology review for HbA1c optimization
+- Monitor serum potassium (on lisinopril + furosemide)
+
+DISCHARGE CONDITION: Stable, improving

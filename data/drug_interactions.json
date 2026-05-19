@@ -1,0 +1,147 @@
+{
+  "interactions": [
+    {
+      "drug_a": "warfarin",
+      "drug_b": "aspirin",
+      "severity": "MAJOR",
+      "effect": "Increased bleeding risk — both drugs inhibit clotting via different pathways.",
+      "recommendation": "Avoid combination unless closely monitored by a physician."
+    },
+    {
+      "drug_a": "warfarin",
+      "drug_b": "ibuprofen",
+      "severity": "MAJOR",
+      "effect": "NSAIDs increase anticoagulant effect of warfarin, raising hemorrhage risk.",
+      "recommendation": "Use acetaminophen instead; monitor INR closely."
+    },
+    {
+      "drug_a": "metformin",
+      "drug_b": "contrast dye",
+      "severity": "MAJOR",
+      "effect": "Risk of contrast-induced nephropathy and lactic acidosis.",
+      "recommendation": "Hold metformin 48 hours before and after contrast procedures."
+    },
+    {
+      "drug_a": "lisinopril",
+      "drug_b": "potassium",
+      "severity": "MODERATE",
+      "effect": "ACE inhibitors can cause hyperkalemia, worsened by potassium supplements.",
+      "recommendation": "Monitor serum potassium levels regularly."
+    },
+    {
+      "drug_a": "simvastatin",
+      "drug_b": "amiodarone",
+      "severity": "MAJOR",
+      "effect": "Amiodarone inhibits CYP3A4, increasing simvastatin levels and myopathy risk.",
+      "recommendation": "Limit simvastatin to 20 mg/day or switch to a non-CYP3A4-dependent statin."
+    },
+    {
+      "drug_a": "clopidogrel",
+      "drug_b": "omeprazole",
+      "severity": "MODERATE",
+      "effect": "Omeprazole inhibits CYP2C19, reducing clopidogrel activation and antiplatelet effect.",
+      "recommendation": "Consider pantoprazole or rabeprazole as an alternative PPI."
+    },
+    {
+      "drug_a": "digoxin",
+      "drug_b": "amiodarone",
+      "severity": "MAJOR",
+      "effect": "Amiodarone increases digoxin plasma levels, risk of digoxin toxicity.",
+      "recommendation": "Reduce digoxin dose by 50% and monitor levels closely."
+    },
+    {
+      "drug_a": "methotrexate",
+      "drug_b": "ibuprofen",
+      "severity": "MAJOR",
+      "effect": "NSAIDs reduce methotrexate renal clearance, causing toxic accumulation.",
+      "recommendation": "Avoid NSAIDs with methotrexate; use acetaminophen for pain relief."
+    },
+    {
+      "drug_a": "fluoxetine",
+      "drug_b": "tramadol",
+      "severity": "MAJOR",
+      "effect": "Risk of serotonin syndrome — agitation, hyperthermia, tachycardia.",
+      "recommendation": "Avoid combination; use alternative analgesics."
+    },
+    {
+      "drug_a": "ciprofloxacin",
+      "drug_b": "theophylline",
+      "severity": "MAJOR",
+      "effect": "Ciprofloxacin inhibits theophylline metabolism, increasing toxicity risk.",
+      "recommendation": "Reduce theophylline dose and monitor serum levels."
+    },
+    {
+      "drug_a": "lithium",
+      "drug_b": "ibuprofen",
+      "severity": "MAJOR",
+      "effect": "NSAIDs reduce lithium excretion, increasing plasma levels and toxicity risk.",
+      "recommendation": "Monitor lithium levels; prefer acetaminophen."
+    },
+    {
+      "drug_a": "sildenafil",
+      "drug_b": "nitrates",
+      "severity": "CONTRAINDICATED",
+      "effect": "Severe hypotension — both drugs cause vasodilation synergistically.",
+      "recommendation": "Absolutely contraindicated. Do not co-administer."
+    },
+    {
+      "drug_a": "ssri",
+      "drug_b": "maoi",
+      "severity": "CONTRAINDICATED",
+      "effect": "Life-threatening serotonin syndrome.",
+      "recommendation": "Absolutely contraindicated. Allow 14-day washout between agents."
+    },
+    {
+      "drug_a": "metformin",
+      "drug_b": "alcohol",
+      "severity": "MODERATE",
+      "effect": "Increased risk of lactic acidosis.",
+      "recommendation": "Advise patient to avoid excessive alcohol consumption."
+    },
+    {
+      "drug_a": "atorvastatin",
+      "drug_b": "clarithromycin",
+      "severity": "MAJOR",
+      "effect": "Clarithromycin inhibits CYP3A4, greatly increasing statin levels and myopathy risk.",
+      "recommendation": "Temporarily suspend atorvastatin during clarithromycin therapy."
+    },
+    {
+      "drug_a": "amlodipine",
+      "drug_b": "simvastatin",
+      "severity": "MODERATE",
+      "effect": "Amlodipine inhibits CYP3A4, increasing simvastatin exposure and myopathy risk.",
+      "recommendation": "Limit simvastatin dose to 20 mg/day."
+    },
+    {
+      "drug_a": "aspirin",
+      "drug_b": "ibuprofen",
+      "severity": "MODERATE",
+      "effect": "Ibuprofen can interfere with aspirin's antiplatelet effect.",
+      "recommendation": "Take aspirin at least 2 hours before ibuprofen."
+    },
+    {
+      "drug_a": "spironolactone",
+      "drug_b": "lisinopril",
+      "severity": "MODERATE",
+      "effect": "Risk of hyperkalemia — both drugs raise potassium levels.",
+      "recommendation": "Monitor renal function and potassium closely."
+    }
+  ],
+  "allergy_alerts": [
+    {
+      "drug_class": "penicillin",
+      "cross_reactive": ["amoxicillin", "ampicillin", "piperacillin", "oxacillin"],
+      "note": "Cross-reactivity between penicillins is common. Check allergy history."
+    },
+    {
+      "drug_class": "sulfonamide",
+      "cross_reactive": ["sulfamethoxazole", "furosemide", "hydrochlorothiazide"],
+      "note": "Sulfa allergy may cross-react with some diuretics."
+    },
+    {
+      "drug_class": "nsaid",
+      "cross_reactive": ["ibuprofen", "naproxen", "diclofenac", "ketorolac", "indomethacin"],
+      "note": "NSAID sensitivity — all members should be avoided."
+    }
+  ]
+}
