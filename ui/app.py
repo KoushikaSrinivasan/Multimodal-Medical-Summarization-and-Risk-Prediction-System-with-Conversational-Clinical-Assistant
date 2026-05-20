@@ -170,7 +170,7 @@ with tab_input:
     with col2:
         xray_file = st.file_uploader("Chest X-Ray Image (optional)", type=["png", "jpg", "jpeg"])
         if xray_file:
-            st.image(xray_file, caption="Uploaded X-Ray", use_column_width=True)
+            st.image(xray_file, caption="Uploaded X-Ray", use_container_width=True)
 
     if st.button("Analyze", type="primary", use_container_width=True):
         if not clinical_text.strip():

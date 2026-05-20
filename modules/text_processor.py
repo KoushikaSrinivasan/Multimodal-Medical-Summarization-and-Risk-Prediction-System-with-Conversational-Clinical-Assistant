@@ -207,12 +207,15 @@ def extract_patient_meta(text: str) -> dict:
     meta = {}
 
     # ── Age ──────────────────────────────────────────────────────────────────
-    # Patterns: "68-year-old", "68 year old", "age: 68", "aged 68", "Age/Sex: 68/M"
+    # Patterns: "68-year-old", "68 year old", "age: 68", "aged 68",
+    #           "Age/Sex: 68/M", "Age: 52, Male", "52 yr", "52 yrs"
     age_patterns = [
         r"\b(\d{1,3})[- ]year[- ]old",
+        r"\bage\s*[:/]\s*(\d{1,3})\s*[,/]",   # Age: 52, Male  or  Age/52
         r"\bage[d]?\s*[:/\-]?\s*(\d{1,3})\b",
         r"\bage\s*/\s*sex\s*[:/]\s*(\d{1,3})",
-        r"\b(\d{1,3})\s*(?:yr|yrs|y\.o)\b",
+        r"\b(\d{1,3})\s*(?:yr|yrs|y\.o)\.?\b",
+        r"patient[^.]*?(\d{1,3})[- ]?year",    # "patient is 52 year"
     ]
     for pat in age_patterns:
         m = re.search(pat, text, re.IGNORECASE)
