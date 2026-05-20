@@ -33,7 +33,6 @@ def extract_entities(text: str) -> dict[str, list[str]]:
     """
     ner = _get_pipeline()
 
-    # BioBERT NER works best on shorter chunks; split on paragraphs
     chunks = _chunk_text(text, max_chars=512)
     raw_entities: list[dict[str, Any]] = []
     for chunk in chunks:
@@ -48,10 +47,10 @@ def extract_entities(text: str) -> dict[str, list[str]]:
     }
 
     for ent in raw_entities:
-        word = ent["word"].strip()
-        label = ent.get("entity_group", ent.get("entity", "")).upper()
-        if not word or len(word) < 2:
+        word = _clean_token(ent["word"])
+        if not word:
             continue
+        label = ent.get("entity_group", ent.get("entity", "")).upper()
 
         if any(k in label for k in ["DIS", "DISEASE", "CONDITION", "DISO"]):
             entities["diseases"].append(word)
@@ -64,18 +63,11 @@ def extract_entities(text: str) -> dict[str, list[str]]:
         else:
             entities["other"].append(word)
 
-    # Deduplicate while preserving order
+    # Deduplicate and clean each category
     for key in entities:
-        seen: set[str] = set()
-        deduped = []
-        for item in entities[key]:
-            normalized = item.lower()
-            if normalized not in seen:
-                seen.add(normalized)
-                deduped.append(item)
-        entities[key] = deduped
+        entities[key] = _dedup_clean(entities[key])
 
-    # Also run regex-based medication extraction as backup
+    # Regex-based backup extraction for medications and labs
     entities["medications"] = _merge_unique(
         entities["medications"], _regex_medications(text)
     )
@@ -83,7 +75,78 @@ def extract_entities(text: str) -> dict[str, list[str]]:
         entities["labs"], _regex_labs(text)
     )
 
+    # Final clean pass on all categories
+    for key in entities:
+        entities[key] = _dedup_clean(entities[key])
+
     return entities
+
+
+# Generic noise words that are never valid medical entities
+_NOISE_WORDS = {
+    "medications", "multiple", "no", "none", "not", "yes", "also",
+    "the", "and", "or", "of", "in", "on", "for", "with", "by",
+    "was", "were", "has", "had", "have", "is", "are", "be",
+    "per", "mg", "ml", "dl", "iv", "po", "prn", "bid", "tid",
+    "once", "twice", "daily", "weekly", "reduced", "elevated",
+    "normal", "abnormal", "negative", "positive", "mild", "severe",
+    "moderate", "bilateral", "right", "left", "upper", "lower",
+    "history", "review", "control", "monitoring", "scale", "dose",
+    "unit", "units", "injection", "infusion", "therapy", "treatment",
+    "admission", "discharge", "follow", "continued", "initiated",
+    "ray", "scan", "test", "result", "culture", "level", "output",
+    "resuscitation", "vegetation", "sliding", "fluid", "blood",
+}
+
+
+def _clean_token(word: str) -> str:
+    """
+    Remove BioBERT WordPiece artifacts and invalid tokens.
+    Returns empty string if the token should be discarded.
+    """
+    word = word.strip()
+
+    # Drop subword fragments (WordPiece artifacts)
+    if word.startswith("##") or word.startswith(" ##"):
+        return ""
+
+    # Remove any remaining ## inside the word
+    word = word.replace("##", "").strip()
+
+    # Drop very short tokens (single chars, 2-char abbreviations that aren't labs)
+    if len(word) <= 2:
+        return ""
+
+    # Drop pure numbers or tokens that are mostly numeric
+    if re.match(r"^[\d\.\,\/\-\+\^\s]+$", word):
+        return ""
+
+    # Drop noise words (case-insensitive)
+    if word.lower() in _NOISE_WORDS:
+        return ""
+
+    # Drop tokens with too many special characters (garbage)
+    special_ratio = sum(1 for c in word if not c.isalnum() and c not in " -") / max(len(word), 1)
+    if special_ratio > 0.4:
+        return ""
+
+    # Title-case for consistency if all lower
+    if word.islower() and len(word) > 3:
+        word = word.title()
+
+    return word
+
+
+def _dedup_clean(items: list[str]) -> list[str]:
+    """Deduplicate while preserving order, case-insensitively."""
+    seen: set[str] = set()
+    result = []
+    for item in items:
+        key = item.lower().strip()
+        if key and key not in seen:
+            seen.add(key)
+            result.append(item)
+    return result
 
 
 def _chunk_text(text: str, max_chars: int = 512) -> list[str]:
