@@ -224,25 +224,6 @@ with tab_summary:
         st.subheader("Medical Timeline")
         st.write(summaries["timeline"])
 
-        st.subheader("Extracted Entities")
-        ecol1, ecol2, ecol3, ecol4 = st.columns(4)
-        with ecol1:
-            st.metric("Conditions", len(entities.get("diseases", [])))
-            for d in entities.get("diseases", []):
-                st.write(f"- {d}")
-        with ecol2:
-            st.metric("Medications", len(entities.get("medications", [])))
-            for m in entities.get("medications", []):
-                st.write(f"- {m}")
-        with ecol3:
-            st.metric("Symptoms", len(entities.get("symptoms", [])))
-            for s in entities.get("symptoms", []):
-                st.write(f"- {s}")
-        with ecol4:
-            st.metric("Lab Findings", len(entities.get("labs", [])))
-            for l in entities.get("labs", []):
-                st.write(f"- {l}")
-
 
 # ─── TAB 3: Risk ─────────────────────────────────────────────────────────────────
 with tab_risk:
