@@ -1,3 +1,7 @@
+================================================================================
+SAMPLE 1 — Pneumonia + COPD + Diabetes (MEDIUM-HIGH RISK)
+================================================================================
+
 DISCHARGE SUMMARY
 
 Patient Name: [REDACTED]
@@ -83,3 +87,281 @@ FOLLOW-UP:
 - Monitor serum potassium (on lisinopril + furosemide)
 
 DISCHARGE CONDITION: Stable, improving
+
+
+================================================================================
+SAMPLE 2 — Heart Failure + Atrial Fibrillation (HIGH RISK)
+================================================================================
+
+DISCHARGE SUMMARY
+
+Patient Name: [REDACTED]
+Date of Admission: 2026-04-10
+Date of Discharge: 2026-04-16
+Attending Physician: Dr. S. Krishnan, MD
+
+CHIEF COMPLAINT:
+Severe breathlessness and leg swelling for 5 days.
+
+HISTORY OF PRESENT ILLNESS:
+A 72-year-old female with known congestive heart failure, atrial fibrillation,
+and hypertension presented with worsening dyspnea, bilateral pedal edema,
+and orthopnea. Patient reported weight gain of 4 kg over the past week.
+
+PAST MEDICAL HISTORY:
+- Congestive Heart Failure (EF 35%)
+- Atrial Fibrillation (on anticoagulation)
+- Hypertension
+- Type 2 Diabetes Mellitus
+- Previous MI 3 years ago
+
+MEDICATIONS ON ADMISSION:
+- Warfarin 5 mg once daily
+- Digoxin 0.25 mg once daily
+- Furosemide 40 mg once daily
+- Carvedilol 12.5 mg twice daily
+- Enalapril 10 mg once daily
+- Aspirin 75 mg once daily
+- Amiodarone 200 mg once daily
+
+INVESTIGATIONS:
+- BNP: 1850 pg/mL (severely elevated)
+- Troponin I: 0.08 ng/mL (mildly elevated)
+- INR: 3.8 (supratherapeutic)
+- Creatinine: 1.8 mg/dL
+- Sodium: 131 mEq/L (hyponatremia)
+- Chest X-Ray: Cardiomegaly with bilateral pulmonary edema
+
+DIAGNOSIS:
+1. Acute decompensated heart failure
+2. Atrial fibrillation with rapid ventricular rate
+3. Supratherapeutic anticoagulation (INR 3.8)
+4. Hyponatremia
+5. Hypertension
+
+TREATMENT:
+- IV Furosemide 80 mg twice daily (diuresis)
+- IV Morphine 2 mg for dyspnea relief
+- Rate control: IV Digoxin loading
+- Warfarin held — INR monitoring
+- Fluid restriction 1.5L/day
+- Oxygen therapy 4L via mask
+
+DISCHARGE MEDICATIONS:
+- Furosemide 80 mg once daily
+- Digoxin 0.125 mg once daily (dose reduced)
+- Warfarin 3 mg once daily (INR target 2-3)
+- Carvedilol 12.5 mg twice daily
+- Enalapril 10 mg once daily
+- Amiodarone 200 mg once daily
+
+FOLLOW-UP:
+- Cardiology review in 1 week
+- INR check in 3 days
+- Daily weight monitoring
+- Restrict salt and fluid intake
+
+DISCHARGE CONDITION: Stable, improved
+
+
+================================================================================
+SAMPLE 3 — Acute Ischemic Stroke (MEDIUM RISK)
+================================================================================
+
+DISCHARGE SUMMARY
+
+Patient Name: [REDACTED]
+Date of Admission: 2026-03-22
+Date of Discharge: 2026-03-29
+Attending Physician: Dr. R. Menon, MD
+
+CHIEF COMPLAINT:
+Sudden onset right-sided weakness and slurred speech.
+
+HISTORY OF PRESENT ILLNESS:
+A 61-year-old male smoker with hypertension and hyperlipidemia
+presented with sudden onset right hemiplegia, dysarthria, and facial
+droop lasting more than 24 hours. NIHSS score at admission: 14.
+
+PAST MEDICAL HISTORY:
+- Hypertension (on treatment)
+- Hyperlipidemia
+- Smoking (40 pack-years)
+- No prior stroke or TIA
+
+MEDICATIONS ON ADMISSION:
+- Amlodipine 10 mg once daily
+- Atorvastatin 40 mg at night
+- No antiplatelet therapy
+
+INVESTIGATIONS:
+- CT Brain: Left MCA territory infarct
+- MRI Brain: Acute ischemic stroke left hemisphere
+- ECG: Normal sinus rhythm
+- Echocardiogram: No cardioembolic source
+- HbA1c: 6.1%
+- LDL: 4.2 mmol/L (elevated)
+- Carotid Doppler: 60% left internal carotid stenosis
+
+DIAGNOSIS:
+1. Acute ischemic stroke (left MCA territory)
+2. Left internal carotid artery stenosis (60%)
+3. Hypertension
+4. Hyperlipidemia
+5. Active smoker
+
+TREATMENT:
+- IV Alteplase thrombolysis (within 4.5 hours)
+- Aspirin 300 mg loading, then 75 mg daily
+- Clopidogrel 75 mg once daily (dual antiplatelet for 21 days)
+- Atorvastatin increased to 80 mg at night
+- BP control: Amlodipine 10 mg continued
+- Physiotherapy and speech therapy initiated
+
+DISCHARGE MEDICATIONS:
+- Aspirin 75 mg once daily
+- Clopidogrel 75 mg once daily
+- Atorvastatin 80 mg at night
+- Amlodipine 10 mg once daily
+- Smoking cessation counseling
+
+FOLLOW-UP:
+- Neurology review in 2 weeks
+- Repeat carotid Doppler in 1 month
+- Consider carotid endarterectomy
+- Physiotherapy 3x/week
+
+DISCHARGE CONDITION: Partial recovery, ongoing rehabilitation
+
+
+================================================================================
+SAMPLE 4 — Acute Appendicitis, Post-Surgery (LOW RISK)
+================================================================================
+
+DISCHARGE SUMMARY
+
+Patient Name: [REDACTED]
+Date of Admission: 2026-05-12
+Date of Discharge: 2026-05-15
+Attending Physician: Dr. P. Kumar, MS (Surgery)
+
+CHIEF COMPLAINT:
+Acute right lower quadrant pain for 18 hours.
+
+HISTORY OF PRESENT ILLNESS:
+A 24-year-old female with no significant past medical history presented
+with progressive right iliac fossa pain, nausea, vomiting, and low-grade
+fever. Pain started around the umbilicus and migrated to the right lower
+quadrant over 12 hours.
+
+PAST MEDICAL HISTORY:
+- No chronic illnesses
+- No prior surgeries
+- No known drug allergies
+
+MEDICATIONS ON ADMISSION:
+- None
+
+INVESTIGATIONS:
+- WBC: 16.8 x10^9/L (elevated)
+- CRP: 98 mg/L (elevated)
+- Urine pregnancy test: Negative
+- Ultrasound abdomen: Appendix not visualized, free fluid in pelvis
+- CT Abdomen: Inflamed appendix 9mm, periappendiceal fat stranding
+
+DIAGNOSIS:
+1. Acute appendicitis
+2. No perforation noted
+
+TREATMENT:
+- IV Cefuroxime 1.5g pre-operatively
+- Laparoscopic appendicectomy performed (Day 1)
+- IV Metronidazole 500 mg three times daily post-operatively
+- IV Morphine 5 mg PRN for pain (first 24 hours)
+- Paracetamol 1g four times daily
+
+DISCHARGE MEDICATIONS:
+- Amoxicillin-Clavulanate 625 mg twice daily for 5 days
+- Ibuprofen 400 mg three times daily with food
+- Paracetamol 500 mg four times daily PRN
+
+FOLLOW-UP:
+- Surgical review in 1 week for wound check
+- Histopathology results in 2 weeks
+- Return immediately if fever, wound discharge, or worsening pain
+
+DISCHARGE CONDITION: Good, recovering well
+
+
+================================================================================
+SAMPLE 5 — MRSA Sepsis + ESRD + Diabetes (CRITICAL RISK)
+================================================================================
+
+DISCHARGE SUMMARY
+
+Patient Name: [REDACTED]
+Date of Admission: 2026-02-18
+Date of Discharge: 2026-02-27
+Attending Physician: Dr. V. Nair, MD
+
+CHIEF COMPLAINT:
+High fever, chills, and reduced urine output for 3 days.
+
+HISTORY OF PRESENT ILLNESS:
+A 58-year-old male with end-stage renal disease on hemodialysis and
+Type 2 diabetes mellitus presented with fever (39.8°C), rigors, hypotension
+(BP 85/50), and confusion. Blood cultures were drawn immediately.
+
+PAST MEDICAL HISTORY:
+- End-Stage Renal Disease (on hemodialysis 3x/week)
+- Type 2 Diabetes Mellitus (insulin-dependent)
+- Hypertension
+- Peripheral vascular disease
+- Multiple prior hospitalizations for sepsis
+
+MEDICATIONS ON ADMISSION:
+- Insulin glargine 30 units at night
+- Insulin lispro sliding scale
+- Amlodipine 5 mg once daily
+- Erythropoietin injections (thrice weekly)
+- Aspirin 75 mg once daily
+- Omeprazole 20 mg once daily
+
+INVESTIGATIONS:
+- WBC: 22.4 x10^9/L (severely elevated)
+- CRP: 310 mg/L (critically elevated)
+- Procalcitonin: 48 ng/mL (sepsis marker)
+- Blood cultures: Staphylococcus aureus (MRSA)
+- Creatinine: 9.8 mg/dL (ESRD baseline)
+- Chest X-Ray: No consolidation, mild cardiomegaly
+- Echocardiogram: No vegetations
+
+DIAGNOSIS:
+1. MRSA septicemia
+2. End-Stage Renal Disease (on dialysis)
+3. Type 2 Diabetes Mellitus
+4. Hypertension
+5. Peripheral vascular disease
+
+TREATMENT:
+- IV Vancomycin (renally dosed, monitored by trough levels)
+- IV Meropenem 500 mg every 24 hours (renal dose)
+- Hemodialysis continued 3x/week
+- IV fluid resuscitation (cautious — fluid overload risk)
+- Insulin sliding scale for glycemic control
+- ICU monitoring for first 48 hours
+
+DISCHARGE MEDICATIONS:
+- Oral Linezolid 600 mg twice daily for 14 days
+- Insulin glargine 30 units at night
+- Amlodipine 5 mg once daily
+- Omeprazole 20 mg once daily
+- Aspirin 75 mg once daily
+
+FOLLOW-UP:
+- Nephrology review in 3 days
+- Repeat blood cultures in 1 week
+- Continue hemodialysis schedule
+- Infectious disease consultation
+
+DISCHARGE CONDITION: Improving, high readmission risk

@@ -131,3 +131,55 @@ def _merge_unique(base: list[str], additions: list[str]) -> list[str]:
             seen.add(item.lower())
             result.append(item)
     return result
+
+
+def extract_patient_meta(text: str) -> dict:
+    """
+    Auto-extract patient age, hospital stay duration, and prior admissions
+    from clinical text using regex patterns.
+    Returns only keys that were successfully detected.
+    """
+    meta = {}
+
+    # Age: "68-year-old", "68 year old", "age: 68", "aged 68"
+    age_match = re.search(r"\b(\d{1,3})[- ]year[- ]old", text, re.IGNORECASE)
+    if not age_match:
+        age_match = re.search(r"\bage[d]?\s*[:\-]?\s*(\d{1,3})\b", text, re.IGNORECASE)
+    if age_match:
+        age = int(age_match.group(1))
+        if 0 < age < 120:
+            meta["age"] = age
+
+    # Time in hospital: difference between admission and discharge dates
+    dates = re.findall(r"\d{4}-\d{2}-\d{2}", text)
+    if len(dates) >= 2:
+        try:
+            from datetime import datetime
+            admission_dt = datetime.strptime(dates[0], "%Y-%m-%d")
+            discharge_dt = datetime.strptime(dates[1], "%Y-%m-%d")
+            days = (discharge_dt - admission_dt).days
+            if 0 < days < 180:
+                meta["time_in_hospital"] = days
+        except ValueError:
+            pass
+
+    # Prior admissions: count explicit mentions
+    prior_patterns = [
+        r"(\d+)\s*(?:previous|prior|past)\s*(?:hospital|admission|hospitalization)",
+        r"(?:previous|prior|past)\s*(?:hospital|admission|hospitalization)[^.]*?(\d+)\s*(?:time|occasion)",
+    ]
+    for pat in prior_patterns:
+        m = re.search(pat, text, re.IGNORECASE)
+        if m:
+            meta["num_prior_admissions"] = int(m.group(1))
+            break
+    else:
+        # Count generic mentions as a rough proxy
+        count = len(re.findall(
+            r"previous hospitalization|prior admission|past admission|prior hospitalization",
+            text, re.IGNORECASE
+        ))
+        if count > 0:
+            meta["num_prior_admissions"] = count
+
+    return meta

@@ -11,7 +11,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 
-from modules.text_processor import extract_entities
+from modules.text_processor import extract_entities, extract_patient_meta
 from modules.summarizer import generate_summaries
 from modules.xray_analyzer import analyze_xray
 from modules.risk_predictor import predict_risk
@@ -50,6 +50,14 @@ if "patient_context" not in st.session_state:
     st.session_state.patient_context = None
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "sb_age" not in st.session_state:
+    st.session_state.sb_age = 65
+if "sb_admissions" not in st.session_state:
+    st.session_state.sb_admissions = 1
+if "sb_stay" not in st.session_state:
+    st.session_state.sb_stay = 3
+if "auto_detected" not in st.session_state:
+    st.session_state.auto_detected = False
 
 
 # ─── Sidebar ────────────────────────────────────────────────────────────────────
@@ -59,13 +67,16 @@ with st.sidebar:
     st.divider()
 
     st.subheader("Patient Information")
-    patient_age = st.slider("Patient Age", 18, 100, 65)
-    num_prior_admissions = st.number_input("Prior Hospital Admissions", 0, 20, 1)
-    time_in_hospital = st.number_input("Current Stay (days)", 1, 60, 3)
+    if st.session_state.auto_detected:
+        st.success("Auto-detected from report")
+
+    patient_age = st.slider("Patient Age", 18, 120, key="sb_age")
+    num_prior_admissions = st.number_input("Prior Hospital Admissions", 0, 20, key="sb_admissions")
+    time_in_hospital = st.number_input("Current Stay (days)", 1, 180, key="sb_stay")
     known_allergies = st.text_input("Known Allergies (comma-separated)", placeholder="e.g. penicillin, nsaid")
 
     st.divider()
-    st.caption("Powered by Claude · BioBERT · torchxrayvision · XGBoost · SHAP")
+    st.caption("Powered by BART · Flan-T5 · BioBERT · torchxrayvision · XGBoost · SHAP")
 
 
 # ─── Main tabs ──────────────────────────────────────────────────────────────────
@@ -101,6 +112,22 @@ with tab_input:
             st.error("Please enter clinical text to analyze.")
         else:
             with st.spinner("Running multimodal analysis... (this may take 30-60 seconds on first run)"):
+                # Auto-detect patient metadata from report text
+                auto_meta = extract_patient_meta(clinical_text)
+                if auto_meta:
+                    if "age" in auto_meta:
+                        st.session_state.sb_age = auto_meta["age"]
+                    if "num_prior_admissions" in auto_meta:
+                        st.session_state.sb_admissions = auto_meta["num_prior_admissions"]
+                    if "time_in_hospital" in auto_meta:
+                        st.session_state.sb_stay = auto_meta["time_in_hospital"]
+                    st.session_state.auto_detected = True
+
+                # Use auto-detected values for this analysis run
+                patient_age = st.session_state.sb_age
+                num_prior_admissions = st.session_state.sb_admissions
+                time_in_hospital = st.session_state.sb_stay
+
                 # NER
                 entities = extract_entities(clinical_text)
 

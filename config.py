@@ -3,11 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-CLAUDE_MODEL = "claude-sonnet-4-6"
-
 NER_MODEL = "d4data/biomedical-ner-all"
 SUMMARIZATION_MODEL = "facebook/bart-large-cnn"
+QA_MODEL = "google/flan-t5-base"
 XRAY_MODEL = "densenet121-res224-nih"  # torchxrayvision model tag
 
 XRAY_CONFIDENCE_THRESHOLD = 0.3  # findings above this are considered positive

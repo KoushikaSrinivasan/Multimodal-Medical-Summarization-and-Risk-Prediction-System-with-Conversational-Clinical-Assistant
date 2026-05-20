@@ -1,20 +1,23 @@
 """
-RAG-based conversational medical assistant using Claude API.
-Grounds all answers in the patient's own report + medical knowledge.
+RAG-based conversational medical assistant using Flan-T5 (google/flan-t5-base).
+Runs fully locally — no API key required.
 """
 
-import anthropic
-from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
+import torch
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from config import QA_MODEL
+
+_tokenizer = None
+_model = None
 
 
-_client = None
-
-
-def _get_client() -> anthropic.Anthropic:
-    global _client
-    if _client is None:
-        _client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    return _client
+def _get_model():
+    global _tokenizer, _model
+    if _model is None:
+        _tokenizer = AutoTokenizer.from_pretrained(QA_MODEL)
+        _model = AutoModelForSeq2SeqLM.from_pretrained(QA_MODEL)
+        _model.eval()
+    return _tokenizer, _model
 
 
 def build_patient_context(
@@ -25,10 +28,6 @@ def build_patient_context(
     drug_result: dict,
     consistency_result: dict,
 ) -> dict:
-    """
-    Build a structured context object from all analysis results.
-    This context is injected into every chatbot prompt as the knowledge base.
-    """
     return {
         "clinical_text": clinical_text,
         "diseases": entities.get("diseases", []),
@@ -51,73 +50,102 @@ def build_patient_context(
 
 def ask(question: str, patient_context: dict, chat_history: list[dict] | None = None) -> str:
     """
-    Answer a clinical question grounded strictly in the patient's context.
-
-    Args:
-        question:        User's question (doctor or patient)
-        patient_context: Output of build_patient_context()
-        chat_history:    List of {"role": "user"/"assistant", "content": "..."} dicts
-
-    Returns:
-        Answer string
+    Answer a clinical question grounded in the patient context using Flan-T5 locally.
     """
-    client = _get_client()
-    system_prompt = _build_system_prompt(patient_context)
+    tokenizer, model = _get_model()
 
-    messages = list(chat_history or [])
-    messages.append({"role": "user", "content": question})
+    # Build compact context (Flan-T5 base has 512 token limit)
+    context = _build_compact_context(patient_context)
 
-    response = client.messages.create(
-        model=CLAUDE_MODEL,
-        max_tokens=600,
-        system=system_prompt,
-        messages=messages,
+    prompt = (
+        f"You are a medical assistant. Answer the question using only the patient record below.\n\n"
+        f"Patient Record:\n{context}\n\n"
+        f"Question: {question}\n\n"
+        f"Answer:"
     )
 
-    return response.content[0].text.strip()
+    inputs = tokenizer(prompt, return_tensors="pt", max_length=512, truncation=True)
+
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=200,
+            num_beams=4,
+            early_stopping=True,
+            no_repeat_ngram_size=3,
+        )
+
+    answer = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+
+    # Fallback if model returns empty or very short answer
+    if len(answer) < 10:
+        answer = _rule_based_answer(question, patient_context)
+
+    return answer
 
 
-def _build_system_prompt(ctx: dict) -> str:
-    drug_interactions_text = ""
+def _build_compact_context(ctx: dict) -> str:
+    """Compress patient context to fit within Flan-T5's 512 token limit."""
+    drug_info = ""
     if ctx["drug_interactions"]:
-        lines = [
-            f"  • {i['drugs'][0]} + {i['drugs'][1]}: {i['severity']} — {i['effect']}"
-            for i in ctx["drug_interactions"]
-        ]
-        drug_interactions_text = "Drug Interactions Detected:\n" + "\n".join(lines)
-    else:
-        drug_interactions_text = "Drug Interactions: None detected."
+        pairs = [f"{i['drugs'][0]}+{i['drugs'][1]}({i['severity']})" for i in ctx["drug_interactions"][:3]]
+        drug_info = f"Drug interactions: {', '.join(pairs)}."
 
-    missed_text = ""
+    missed = ""
     if ctx["missed_finding_alerts"]:
-        lines = [f"  • {a['finding']} (confidence: {a['confidence']:.0%})" for a in ctx["missed_finding_alerts"]]
-        missed_text = "Potential Missed X-ray Findings:\n" + "\n".join(lines)
+        findings = [a["finding"] for a in ctx["missed_finding_alerts"][:2]]
+        missed = f"Missed X-ray findings: {', '.join(findings)}."
 
-    return f"""You are a clinical AI assistant helping patients and doctors understand a medical report.
+    return (
+        f"Diagnoses: {', '.join(ctx['diseases'][:5]) or 'unknown'}. "
+        f"Medications: {', '.join(ctx['medications'][:6]) or 'none'}. "
+        f"Symptoms: {', '.join(ctx['symptoms'][:4]) or 'none'}. "
+        f"Labs: {', '.join(ctx['labs'][:4]) or 'none'}. "
+        f"X-ray: {', '.join(ctx['xray_findings'][:3]) or 'none'}. "
+        f"Readmission risk: {ctx['readmission_risk']:.0%} ({ctx['severity']}). "
+        f"Emergency risk: {ctx['emergency_risk']:.0%}. "
+        f"{drug_info} {missed} "
+        f"Summary: {ctx['doctor_summary'][:300]}"
+    )
 
-PATIENT RECORD SUMMARY:
-- Diagnosed Conditions: {', '.join(ctx['diseases']) or 'Not specified'}
-- Current Medications: {', '.join(ctx['medications']) or 'Not specified'}
-- Symptoms: {', '.join(ctx['symptoms']) or 'Not specified'}
-- Lab Findings: {', '.join(ctx['labs']) or 'Not specified'}
-- X-ray Findings: {', '.join(ctx['xray_findings']) or 'No imaging'}
-- Readmission Risk: {ctx['readmission_risk']:.0%} ({ctx['severity']})
-- Emergency Risk: {ctx['emergency_risk']:.0%}
 
-{drug_interactions_text}
-{missed_text}
+def _rule_based_answer(question: str, ctx: dict) -> str:
+    """Fallback answers for common questions when model output is poor."""
+    q = question.lower()
 
-CLINICAL SUMMARY:
-{ctx['doctor_summary']}
+    if any(k in q for k in ["diagnos", "disease", "condition", "problem"]):
+        diseases = ', '.join(ctx['diseases']) or "Not identified"
+        return f"The patient's diagnosed conditions are: {diseases}."
 
-FULL CLINICAL TEXT:
-{ctx['clinical_text'][:3000]}
+    if any(k in q for k in ["medic", "drug", "tablet", "pill", "prescription"]):
+        meds = ', '.join(ctx['medications']) or "None listed"
+        return f"The patient's medications include: {meds}."
 
-RULES:
-1. Base all answers strictly on the patient record above.
-2. If information is not in the record, say so clearly — do not hallucinate.
-3. Explain medical terms simply when speaking to a patient.
-4. Always recommend consulting a physician for treatment decisions.
-5. For drug interaction questions, cite the specific drugs and severity.
-6. For missed X-ray findings, clearly flag them as requiring physician review.
-7. Keep answers concise (under 200 words) unless detail is explicitly requested."""
+    if any(k in q for k in ["risk", "readmit", "danger"]):
+        return (
+            f"The patient has a readmission risk of {ctx['readmission_risk']:.0%} "
+            f"({ctx['severity']} severity) and an emergency risk of {ctx['emergency_risk']:.0%}."
+        )
+
+    if any(k in q for k in ["interaction", "conflict", "safe"]):
+        if ctx["drug_interactions"]:
+            pairs = [f"{i['drugs'][0]} and {i['drugs'][1]} ({i['severity']})" for i in ctx["drug_interactions"]]
+            return f"Drug interactions detected: {'; '.join(pairs)}."
+        return "No drug interactions were detected for this patient."
+
+    if any(k in q for k in ["xray", "x-ray", "scan", "image", "finding"]):
+        findings = ', '.join(ctx['xray_findings']) or "No imaging provided"
+        return f"X-ray findings: {findings}."
+
+    if any(k in q for k in ["missed", "miss"]):
+        if ctx["missed_finding_alerts"]:
+            missed = [a["finding"] for a in ctx["missed_finding_alerts"]]
+            return f"Potential missed findings in X-ray (not documented in notes): {', '.join(missed)}."
+        return "No missed findings detected — X-ray and clinical notes are consistent."
+
+    return (
+        f"Based on the patient record: diagnoses are {', '.join(ctx['diseases'][:3]) or 'unknown'}, "
+        f"medications include {', '.join(ctx['medications'][:3]) or 'none'}, "
+        f"and readmission risk is {ctx['readmission_risk']:.0%}. "
+        f"Please consult a physician for detailed medical advice."
+    )
