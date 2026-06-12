@@ -41,3 +41,6 @@ plotly>=5.18.0
 # Utilities
 python-dotenv>=1.0.0
 pydantic>=2.0.0
+
+# Document parsing
+pypdf>=4.0.0

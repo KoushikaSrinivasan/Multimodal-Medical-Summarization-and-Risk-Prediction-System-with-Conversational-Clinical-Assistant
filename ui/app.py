@@ -6,12 +6,14 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
+import io
 import tempfile
 from pathlib import Path
 
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
+from pypdf import PdfReader
 
 from modules.text_processor import extract_entities, extract_patient_meta
 from modules.summarizer import generate_summaries
@@ -58,10 +60,23 @@ _defaults = {
     "pending_xray_bytes": None,
     "pending_xray_name": None,
     "pending_allergies": "",
+    "clinical_text_area": "",
+    "last_report_file_id": None,
 }
 for _k, _v in _defaults.items():
     if _k not in st.session_state:
         st.session_state[_k] = _v
+
+
+# ─── Report file parsing (PDF / TXT) ─────────────────────────────────────────────
+def _extract_text_from_pdf(file_bytes: bytes) -> str:
+    reader = PdfReader(io.BytesIO(file_bytes))
+    pages = [page.extract_text() or "" for page in reader.pages]
+    return "\n".join(pages).strip()
+
+
+def _extract_text_from_txt(file_bytes: bytes) -> str:
+    return file_bytes.decode("utf-8", errors="ignore").strip()
 
 
 # ─── PHASE 2: Execute pending analysis (runs after rerun updates sidebar) ────────
@@ -160,12 +175,36 @@ tab_input, tab_summary, tab_risk, tab_xray, tab_drugs, tab_consistency, tab_chat
 with tab_input:
     st.header("Upload Medical Records")
 
+    report_file = st.file_uploader(
+        "Upload Clinical Report — PDF or TXT (optional, fills the text box below)",
+        type=["pdf", "txt"],
+    )
+    if report_file is not None:
+        file_id = f"{report_file.name}_{report_file.size}"
+        if file_id != st.session_state.last_report_file_id:
+            file_bytes = report_file.read()
+            if report_file.name.lower().endswith(".pdf"):
+                extracted = _extract_text_from_pdf(file_bytes)
+            else:
+                extracted = _extract_text_from_txt(file_bytes)
+
+            st.session_state.last_report_file_id = file_id
+            if extracted:
+                st.session_state.clinical_text_area = extracted
+                st.success(f"Extracted {len(extracted)} characters from {report_file.name}")
+            else:
+                st.warning(
+                    "Could not extract text from this PDF — it may be a scanned/image-based "
+                    "document. Please paste the report text manually below."
+                )
+
     col1, col2 = st.columns([2, 1])
     with col1:
         clinical_text = st.text_area(
             "Clinical Text (discharge note / lab report / prescription)",
             height=320,
-            placeholder="Paste discharge summary, lab report, or clinical notes here...",
+            placeholder="Paste discharge summary, lab report, or clinical notes here, or upload a PDF/TXT file above...",
+            key="clinical_text_area",
         )
     with col2:
         xray_file = st.file_uploader("Chest X-Ray Image (optional)", type=["png", "jpg", "jpeg"])
