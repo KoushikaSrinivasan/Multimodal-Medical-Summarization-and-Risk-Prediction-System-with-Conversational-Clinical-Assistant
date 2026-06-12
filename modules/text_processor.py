@@ -314,4 +314,30 @@ def extract_patient_meta(text: str) -> dict:
         if count > 0:
             meta["num_prior_admissions"] = count
 
+    # ── Allergies ─────────────────────────────────────────────────────────────
+    no_allergy_patterns = [
+        r"no known (?:drug )?allergies",
+        r"\bnkda\b",
+        r"denies any (?:drug )?allerg(?:y|ies)",
+        r"allerg(?:y|ies)\s*[:\-]\s*(?:none|nil|nkda|no known)",
+    ]
+    allergy_patterns = [
+        r"known (?:drug )?allerg(?:y|ies)\s*[:\-]\s*([^\n.]+)",
+        r"allerg(?:y|ies)\s*[:\-]\s*([^\n.]+)",
+        r"allergic to\s+([^\n.]+)",
+    ]
+
+    for pat in no_allergy_patterns:
+        if re.search(pat, text, re.IGNORECASE):
+            meta["allergies"] = ""
+            break
+    else:
+        for pat in allergy_patterns:
+            m = re.search(pat, text, re.IGNORECASE)
+            if m:
+                allergy_text = m.group(1).strip().rstrip(".")
+                if allergy_text.lower() not in ("none", "nil", "nkda", "no known drug allergies"):
+                    meta["allergies"] = allergy_text
+                    break
+
     return meta

@@ -62,6 +62,7 @@ _defaults = {
     "pending_allergies": "",
     "clinical_text_area": "",
     "last_report_file_id": None,
+    "meta_allergies": "",
 }
 for _k, _v in _defaults.items():
     if _k not in st.session_state:
@@ -159,7 +160,7 @@ with st.sidebar:
     patient_age          = st.slider("Patient Age", 1, 120, value=int(st.session_state.meta_age))
     num_prior_admissions = st.number_input("Prior Hospital Admissions", 0, 20, value=int(st.session_state.meta_admissions))
     time_in_hospital     = st.number_input("Current Stay (days)", 1, 180, value=int(st.session_state.meta_stay))
-    known_allergies      = st.text_input("Known Allergies (comma-separated)", placeholder="e.g. penicillin, nsaid")
+    known_allergies      = st.text_input("Known Allergies (comma-separated)", value=st.session_state.meta_allergies, placeholder="e.g. penicillin, nsaid")
 
     st.divider()
     st.caption("Powered by BART · Flan-T5 · BioBERT · torchxrayvision · XGBoost · SHAP")
@@ -191,7 +192,22 @@ with tab_input:
             st.session_state.last_report_file_id = file_id
             if extracted:
                 st.session_state.clinical_text_area = extracted
-                st.success(f"Extracted {len(extracted)} characters from {report_file.name}")
+
+                # Auto-detect patient info from the extracted report
+                auto_meta = extract_patient_meta(extracted)
+                if "age" in auto_meta:
+                    st.session_state.meta_age = auto_meta["age"]
+                if "num_prior_admissions" in auto_meta:
+                    st.session_state.meta_admissions = auto_meta["num_prior_admissions"]
+                if "time_in_hospital" in auto_meta:
+                    st.session_state.meta_stay = auto_meta["time_in_hospital"]
+                if "allergies" in auto_meta:
+                    st.session_state.meta_allergies = auto_meta["allergies"]
+                if auto_meta:
+                    st.session_state.auto_detected = True
+
+                st.toast(f"Extracted {len(extracted)} characters — patient info auto-detected", icon="📄")
+                st.rerun()
             else:
                 st.warning(
                     "Could not extract text from this PDF — it may be a scanned/image-based "
